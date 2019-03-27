@@ -54,7 +54,7 @@ def setup_swagger(app: web.Application,
                     if not swagger_url.startswith("/")
                     else swagger_url)
     _base_swagger_url = _swagger_url.rstrip('/')
-    _swagger_def_url = '{}/swagger.json'.format(_base_swagger_url)
+    _swagger_def_url = join(_base_swagger_url, 'swagger.json')
 
     # Build Swagget Info
     if swagger_info is None:
@@ -86,7 +86,7 @@ def setup_swagger(app: web.Application,
     app.router.add_route('GET', _swagger_def_url, _swagger_def_func)
 
     # Set statics
-    statics_path = '{}/swagger_static'.format(_base_swagger_url)
+    statics_path = join(_base_swagger_url, 'swagger_static')
     app.router.add_static(statics_path, STATIC_PATH)
 
     # --------------------------------------------------------------------------
@@ -97,8 +97,8 @@ def setup_swagger(app: web.Application,
         bundle_params_str = json.dumps(bundle_params or {})
         app["SWAGGER_TEMPLATE_CONTENT"] = (
             f.read()
-            .replace("##SWAGGER_CONFIG##", _swagger_def_url)
-            .replace("##STATIC_PATH##", statics_path)
+            .replace("##SWAGGER_CONFIG##", join(api_base_url, _swagger_def_url.strip('/')))
+            .replace("##STATIC_PATH##", join(api_base_url, statics_path.strip('/')))
             .replace("##BUNDLE_PARAMS##", bundle_params_str)
         )
 

@@ -40,7 +40,7 @@ def _build_doc_from_func_doc(route):
 
     out = {}
 
-    if issubclass(route.handler, web.View) and route.method == METH_ANY:
+    if issubclass(route.handler.__class__, web.View) and route.method == METH_ANY:
         method_names = {
             attr for attr in dir(route.handler) \
             if attr.upper() in METH_ALL
